@@ -4,8 +4,12 @@
     border-radius: 5px;
 }
 
+button{
+    cursor: pointer;
+}
+
 .container {
-    max-width: 1200px;
+    max-width: 1320px;
     margin: 0px auto;
     padding-left: 15px;
     padding-right: 15px;
@@ -43,7 +47,7 @@ div label input {
     margin-right: 100px;
 }
 
-.check{
+.check {
     margin: 4px;
     background-color: rgba(128, 128, 128, 0.111);
     border: 1px solid #fff;
@@ -89,42 +93,51 @@ select {
     font-size: 14px;
 }
 
-.taskStatus {
+section .container {
     display: flex;
-    gap: 10px;
-    font-size: 25px;
-    font-weight: 600;
+    flex-direction: column;
+    gap: 20px;
 }
 
-.taskIcon{
-    /* display: flex; */
-   gap: 20px;
+.taskStatus {
+    font-size: 25px;
+    font-weight: 600;
+    padding: 10px;
 }
-/* .list {
-   
-} */
+
+.taskType-wrap {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.task-Details {
+    display: flex;
+    flex-wrap: wrap;
+}
 
 .box {
     width: 300px;
     max-height: 200px;
-    border: 2px dotted #d3caca;
+    background-color: rgba(128, 128, 128, 0.089);
     display: flex;
     flex-direction: column;
     padding: 10px;
     margin: 10px;
 }
 
-.box h3{
+.box h3 {
     margin-bottom: 5px;
 }
 
-.btn{
+.btn {
     margin: 5px;
     float: left;
 }
 
-.btn span  {
+.btn span {
     text-transform: capitalize;
     background-color: transparent;
-    /* margin: 10px; */
 }

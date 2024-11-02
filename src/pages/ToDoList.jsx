@@ -8,14 +8,12 @@ import './ToDoList.css'
 function ToDoList() {
 
     let [data, setData] = useState({});
-    // let [task, setTast] = useState('todo');
     let [language, setLanguage] = useState([]);
     let [list, setList] = useState([]);
 
-
     useEffect(() => {
         let getData = JSON.parse(localStorage.getItem('todolist'));
-        setList(getData ? getData : "");
+        setList(getData ? getData : []);
     }, [setList])
 
     let handleChange = (e) => {
@@ -36,31 +34,38 @@ function ToDoList() {
         }
         setData({ ...data, [name]: value })
     }
-    console.log(data.taskType);
-    
 
     let deleteData = (i) => {
         list.splice(i, 1);
-        localStorage.setItem("todolist", JSON.stringify([...list]));
         setList([...list]);
+        localStorage.setItem("todolist", JSON.stringify([...list]));
+        console.log(list);
     }
 
     let submitData = (e) => {
         e.preventDefault();
+        if (!data) {
+            console.error("Invalid data: Missing required properties");
+            return;
+        }
+
         const newList = [...list, data];
         setList(newList);
         localStorage.setItem('todolist', JSON.stringify(newList));
-    }
-
+        setData({});
+        setLanguage([]);
+    };
     return (
         <>
             <div className="container">
                 <form method="post" onSubmit={submitData} style={{ marginBottom: "35px" }}>
+                    {/* Enter your task */}
                     <div className="row">
                         <div className='task'>
                             <input type="text" placeholder="Enter your task" name='taskDescription' onChange={handleChange} value={data.taskDescription ? data.taskDescription : ""} />
                         </div>
                     </div>
+                    {/* task type */}
                     <div className="row">
                         <div className="check">
                             <label>
@@ -96,38 +101,51 @@ function ToDoList() {
                         </div>
                     </div>
                 </form>
+            </div>
 
-                <div className="row">
-                    <div className="col-4 taskStatus">
-                        <div>
-                            <TbTargetArrow style={{ color: "red" }} />To Do
-                            {
-                                list.filter((v, i) => {
-                                    if (v.taskType == 'todo') {
-                                        return v;
-                                    }
-                                }).map((v, i) => {
-                                    return (
-                                        <>
-                                            <div className="box">
-                                                <p>{v.taskDescription}</p>
-                                                <div className="btn">
-                                                    <span>{v.language.join(' , ')}</span>
+
+            <section>
+                <div className="container">
+                    {/* 1 */}
+                    <div className="row">
+                        <div className="taskStatus">
+                            <div className='taskType-wrap'>
+                                <TbTargetArrow style={{ color: "red" }} />
+                                <p>TO DO</p>
+                            </div>
+
+                            <div className='task-Details'>
+                                {
+                                    list.filter((v, i) => {
+                                        if (v.taskType == 'todo') {
+                                            return v;
+                                        }
+                                    }).map((v, i) => {
+                                        return (
+                                            <>
+                                                <div className="box">
+                                                    <p>{v.taskDescription}</p>
+                                                    <div className="btn">
+                                                        <span>{v.language.join(' , ')}</span>
+                                                    </div>
+                                                    <MdOutlineDeleteOutline onClick={() => deleteData(i)} />
                                                 </div>
-                                                <MdOutlineDeleteOutline onClick={() => deleteData(i)} />
-                                            </div>
-                                        </>
-                                    )
-                                })
-                            }
+                                            </>
+                                        )
+                                    })
+                                }
+                            </div>
                         </div>
                     </div>
-
-                    <div className="col-4 taskStatus">
-                        <div className='list'>
-                            <GiStarsStack style={{ color: "yellow" }} className='taskIcon' />Doing
-                            {
-                                list.filter((v, i) => {
+                    {/* 2 */}
+                    <div className="row">
+                        <div className="taskStatus">
+                            <div className='taskType-wrap'>
+                                <GiStarsStack style={{ color: "yellow" }} />
+                                <p>DOING</p>
+                            </div>
+                            <div className="task-Details">
+                                {list.filter((v, i) => {
                                     if (v.taskType == 'doing') {
                                         return v;
                                     }
@@ -144,15 +162,19 @@ function ToDoList() {
                                         </>
                                     )
                                 })
-                            }
+                                }
+                            </div>
                         </div>
                     </div>
-
-                    <div className="col-4 taskStatus">
-                        <div>
-                            <ImCheckboxChecked style={{ color: "green" }} />Done
-                            {
-                                list.filter((v, i) => {
+                    {/* 3 */}
+                    <div className="row">
+                        <div className="taskStatus">
+                            <div className='taskType-wrap'>
+                                <ImCheckboxChecked style={{ color: "green" }} />
+                                <p>DONE</p>
+                            </div>
+                            <div className="task-Details">
+                                {list.filter((v, i) => {
                                     if (v.taskType == 'done') {
                                         return v;
                                     }
@@ -169,11 +191,14 @@ function ToDoList() {
                                         </>
                                     )
                                 })
-                            }
+                                }
+                            </div>
+
+
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
         </>
     )
@@ -183,8 +208,89 @@ export default ToDoList;
 
 
 
+{/* <div className="row">
+    TO DO
+    <div className="col-4 taskStatus">
+        <div>
+            <div className='taskType-wrap'>
+                <TbTargetArrow style={{ color: "red" }} />
+                <p>TO DO</p>
+            </div>
 
+            {
+                list.filter((v, i) => {
+                    if (v.taskType == 'todo') {
+                        return v;
+                    }
+                }).map((v, i) => {
+                    return (
+                        <>
+                            <div className="box">
+                                <p>{v.taskDescription}</p>
+                                <div className="btn">
+                                    <span>{v.language.join(' , ')}</span>
+                                </div>
+                                <MdOutlineDeleteOutline onClick={() => deleteData(i)} />
+                            </div>
+                        </>
+                    )
+                })
+            }
+        </div>
+    </div>
+    DOING
+    <div className="col-4 taskStatus">
+        <div>
+            <div className='taskType-wrap'>
+                <GiStarsStack style={{ color: "yellow" }} />
+                <p>DOING</p>
+            </div>
+            {list.filter((v, i) => {
+                if (v.taskType == 'doing') {
+                    return v;
+                }
+            }).map((v, i) => {
+                return (
+                    <>
+                        <div className="box">
+                            <h3>{v.taskDescription}</h3>
+                            <div className="btn">
+                                <span>{v.language.join(' , ')}</span>
+                            </div>
+                            <MdOutlineDeleteOutline onClick={() => deleteData(i)} />
+                        </div>
+                    </>
+                )
+            })
+            }
+        </div>
+    </div>
+    DONE
+    <div className="col-4 taskStatus">
+        <div>
+            <div className='taskType-wrap'>
+                <ImCheckboxChecked style={{ color: "green" }} />
+                <p>DONE</p>
+            </div>
 
-{/* <div className="col-4 taskStatus"><TbTargetArrow style={{ color: "red" }} />To Do</div> */ }
-{/* <div className="col-4 taskStatus"><GiStarsStack style={{ color: "yellow" }} />Doing</div> */ }
-{/* <div className="col-4 taskStatus"><ImCheckboxChecked style={{ color: "green" }} />Done</div> */ }
+            {list.filter((v, i) => {
+                if (v.taskType == 'done') {
+                    return v;
+                }
+            }).map((v, i) => {
+                return (
+                    <>
+                        <div className="box">
+                            <p>{v.taskDescription}</p>
+                            <div className="btn">
+                                <span>{v.language.join(' , ')}</span>
+                            </div>
+                            <MdOutlineDeleteOutline onClick={() => deleteData(i)} />
+                        </div>
+                    </>
+                )
+            })
+            }
+        </div>
+    </div>
+</div> */}
